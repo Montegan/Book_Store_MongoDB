@@ -9,7 +9,7 @@ import ErrorPage from "./pages/ErrorPage";
 
 const App = () => {
   return (
-    <div className="bg-red-500 h-8 w-full">
+    <div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/books/create" element={<CreateBook />} />
