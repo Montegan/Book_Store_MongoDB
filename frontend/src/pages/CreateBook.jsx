@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Spiner from "../components/Spiner";
+import { useNavigate } from "react-router-dom";
 
-const CreateBook = () => {
+const CreateBook = ({ setNotification }) => {
   const [book, setBook] = useState({
     title: "",
     author: "",
     publishyear: "",
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:2000/books/", book);
-
       console.log("Book created successfully", res.data); // Log success
       setLoading(false);
+      navigate("/");
+      setNotification("created");
     } catch (error) {
       console.log(error);
     }
@@ -34,14 +37,14 @@ const CreateBook = () => {
           onSubmit={handleSubmit}
           className="p-4 w-[600px] h-[60vh] rounded-lg flex flex-col gap-6 items-center justify-center mt-5 mx-auto bg-neutral-200"
         >
-          <div className="w-[300px] flex flex-col ">
+          <div className="w-[70%]  flex flex-col ">
             <label className=" text-lg w-fit " htmlFor="title">
               Title
             </label>
             <input
               id="title"
               type="text"
-              className=" w-[300px] min-w-[100px] bg-slate-100 p-2 rounded-md"
+              className=" w-full min-w-[100px] focus:outline-none bg-slate-100 p-2 rounded-md"
               value={book.title}
               onChange={(e) => {
                 setBook({ ...book, title: e.target.value });
@@ -49,12 +52,12 @@ const CreateBook = () => {
             />
           </div>
 
-          <div className="w-[300px] flex flex-col ">
+          <div className="w-[70%] flex flex-col ">
             <label className="text-lg w-fit " htmlFor="author">
               author
             </label>
             <input
-              className=" w-[300px] min-w-[100px] bg-slate-100 p-2 rounded-md"
+              className="  w-full min-w-[100px] focus:outline-none bg-slate-100 p-2 rounded-md"
               id="author"
               type="text"
               value={book.author}
@@ -64,12 +67,12 @@ const CreateBook = () => {
             />
           </div>
 
-          <div className="w-[300px] flex flex-col ">
+          <div className="w-[70%] flex flex-col ">
             <label className=" text-lg w-fit " htmlFor="publish">
               Publish date
             </label>
             <input
-              className=" w-[300px] min-w-[100px] bg-slate-100 p-2 rounded-md"
+              className="  w-full min-w-[100px] focus:outline-none bg-slate-100 p-2 rounded-md"
               id="publish"
               type="number"
               value={book.publishyear}

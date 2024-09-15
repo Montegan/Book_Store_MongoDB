@@ -5,13 +5,22 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOutlineAddBox, MdOutlineDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
+import BooksTable from "../components/home/booksTable";
+import BooksCard from "../components/home/booksCard";
 
-const Home = () => {
+const Home = ({ notification, setNotification }) => {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const [deleted, setDeleted] = useState("");
+  const [showType, setShowtype] = useState("table");
 
   useEffect(() => {
+    notification == "deleted" && setDeleted(" Book deleted successfully ");
+    notification == "created" && setDeleted("Book created successfully");
+    setTimeout(() => {
+      setNotification("");
+    }, 1000);
     const getData = async () => {
       try {
         const result = await axios.get("http://localhost:2000/books/");
@@ -30,8 +39,47 @@ const Home = () => {
   }, []);
   return (
     <div className="p-4">
+      <div className="flex justify-center items-center">
+        <button
+          onClick={() => {
+            setShowtype("table");
+          }}
+          className={
+            showType == "table" &&
+            "border-b-4 bg-slate-100   border-b-black  focus:bg-slate-300 px-6 py-2"
+          }
+        >
+          Table
+        </button>
+
+        <button
+          onClick={() => {
+            setShowtype("card");
+          }}
+          className={
+            showType == "card" &&
+            "border-b-4 bg-slate-100   border-b-black  focus:bg-slate-300 px-6 py-2"
+          }
+        >
+          Card
+        </button>
+      </div>
+
       <div className="flex justify-between items-center">
         <h1 className="text-3xl my-8">Books List</h1>
+
+        <span
+          className={
+            notification == "deleted"
+              ? " block bg-red-300 p-2 animate-pulse rounded-xl "
+              : notification == "created"
+              ? " block bg-green-300 animate-pulse p-2  rounded-xl "
+              : " hidden "
+          }
+        >
+          {deleted}
+        </span>
+
         <Link to="/books/create">
           <MdOutlineAddBox className="text-sky-800 text-4xl" />
         </Link>
@@ -40,51 +88,10 @@ const Home = () => {
         <Spiner></Spiner>
       ) : error ? (
         <h2>{error}</h2>
+      ) : showType == "table" ? (
+        <BooksTable books={books} />
       ) : (
-        <table className=" w-full  border-separate border-spacing-2">
-          <thead>
-            <tr>
-              <th className="border border-slate-600 rounded-md">ID</th>
-              <th className="border border-slate-600 rounded-md">Title</th>
-              <th className="border border-slate-600 rounded-md">Author</th>
-              <th className="border border-slate-600 rounded-md">
-                Publish Year
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {books.map((item, indx) => (
-              <tr key={item._id} className="h-8">
-                <td className="border border-slate-700 rounded-md text-center">
-                  {indx + 1}
-                </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  {item.title}
-                </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  {item.Author}
-                </td>
-                <td className="border border-slate-700 rounded-md text-center">
-                  {item.publishYear}
-                </td>
-
-                <td className="border border-slate-700 rounded-md text-center">
-                  <div className="flex justify-center gap-4">
-                    <Link to={`/books/edit/${item._id}`}>
-                      <AiOutlineEdit className="text-2xl text-green-500" />
-                    </Link>
-                    <Link to={`/books/details/${item._id}`}>
-                      <BsInfoCircle className="text-2xl text-yellow-500" />
-                    </Link>
-                    <Link to={`/books/delete/${item._id}`}>
-                      <MdOutlineDelete className="text-2xl text-red-500" />
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <BooksCard books={books} />
       )}
     </div>
   );
