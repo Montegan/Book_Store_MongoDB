@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Spiner from "../components/Spiner";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../Context/AppState";
 
-const CreateBook = ({ setNotification }) => {
+const CreateBook = () => {
   const [book, setBook] = useState({
     title: "",
     author: "",
@@ -11,7 +12,7 @@ const CreateBook = ({ setNotification }) => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { setNotification } = useNotification();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

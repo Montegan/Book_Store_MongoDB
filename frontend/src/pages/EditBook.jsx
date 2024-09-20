@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Spiner from "../components/Spiner";
+import { useNotification } from "../Context/AppState";
 
 const EditBook = () => {
   const [book, setBook] = useState({
@@ -10,7 +11,9 @@ const EditBook = () => {
     publishYear: "",
   });
   const [Loading, setLoading] = useState(false);
+  const { setNotification } = useNotification();
   const id = useParams();
+  const navigate = useNavigate();
   useEffect(() => {
     const getOldData = async () => {
       setLoading(true);
@@ -41,6 +44,8 @@ const EditBook = () => {
       );
       console.log(res.data);
       setLoading(false);
+      setNotification("edited");
+      navigate("/");
     } catch (err) {
       console.log(err);
     }

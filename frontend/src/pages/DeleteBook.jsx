@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-const DeleteBook = ({ setNotification }) => {
+import { useNotification } from "../Context/AppState";
+const DeleteBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [book, setBook] = useState({
@@ -9,7 +10,7 @@ const DeleteBook = ({ setNotification }) => {
     Author: "",
     publishYear: "",
   });
-
+  const { setNotification } = useNotification();
   useEffect(() => {
     const getOldData = async () => {
       try {
